@@ -18,7 +18,7 @@ div.gallery img {
 div.desc {
     padding: 15px;
     text-align: center;
-    background-color: #8b1f1b;
+    background-color: #056779;
     color: #ffffff;
 }
 
@@ -102,14 +102,22 @@ div.desc {
 </style>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/addpassword.css') }}">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 </head>
 <body>
+        <div class="topnav">
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        </div>        
 {% for i in range(pollsCount|count) %}
 <div class="responsive">
   <div class="gallery">
     <div class="desc">
         <form action="/poll/{{ pollsCount[i]['un_id'] }}" method="POST">
-            <p>Question: {{ pollsCount[i]['question'] }}</p>
+            <h3>{{ pollsCount[i]['question'] }}</h3>
             <input type="submit" value="View Poll" class="btn">
         </form>
     </div>
