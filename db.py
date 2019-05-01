@@ -35,9 +35,9 @@ class Database(object):
             check = cursor.fetchone()
         self.connection.commit()
 
-    def addpoll(self, question, option1, option2, username):
+    def addpoll(self, question, option1, option2, username, typePoll):
         with self.connection.cursor() as cursor:
-            com = "INSERT INTO polling (question, op1, op2, op1count, op2count, userid) VALUES ('"+question+"', '"+option1+"', '"+option2+"', 0, 0, '"+username+"')"
+            com = "INSERT INTO polling (question, op1, op2, op1count, op2count, userid, type) VALUES ('"+question+"', '"+option1+"', '"+option2+"', 0, 0, '"+username+"', '"+typePoll+"')"
             cursor.execute(com)
         self.connection.commit()
 
@@ -49,19 +49,25 @@ class Database(object):
         self.connection.commit()
         return check
 
-    def getPolls(self, dummyData):
+    def getPublicPolls(self, dummyData):
         with self.connection.cursor() as cursor:
-            com = "SELECT * FROM polling"
+            com = "SELECT * FROM polling WHERE type='public'"
             cursor.execute(com)
             check = cursor.fetchall()
         self.connection.commit()
-        print(check)
+        return check
+
+    def getPrivatePolls(self, dummyData):
+        with self.connection.cursor() as cursor:
+            com = "SELECT * FROM polling WHERE type='private'"
+            cursor.execute(com)
+            check = cursor.fetchall()
+        self.connection.commit()
         return check
 
     def getPollbyID(self, pollid):
         with self.connection.cursor() as cursor:
             com = "SELECT * from polling WHERE un_id="+pollid
-            print(com)
             cursor.execute(com)
             check = cursor.fetchone()
         self.connection.commit()

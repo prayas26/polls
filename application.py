@@ -15,10 +15,12 @@ app.secret_key = "pollsapp"
 @app.route('/')
 def index():
 	if 'login' in session:
-		return redirect(url_for('dashboard'))
+		pollsCountPrivate = pyBot.getPrivatePolls('username')
+		pollsCountPublic = pyBot.getPublicPolls('username')
+		return render_template('index.html', pollsCountPrivate=pollsCountPrivate, pollsCountPublic=pollsCountPublic)
 	else:
-		pollsCount = pyBot.getPolls('username')
-		return render_template('index.html', pollsCount=pollsCount)
+		pollsCountPublic= pyBot.getPublicPolls('username')
+		return render_template('index.html', pollsCountPublic=pollsCountPublic)
 
 @app.route('/login')
 def log_in():
@@ -85,7 +87,8 @@ def create():
 		question = request.form["question"]
 		option1 = request.form["option1"]
 		option2 = request.form["option2"]
-		pyBot.addpoll(question, option1, option2, session["username"])
+		typePoll = request.form["typePoll"]
+		pyBot.addpoll(question, option1, option2, session["username"], typePoll)
 		return render_template('polladded.html')
 
 @app.route('/poll/<pollid>', methods=["POST"])
@@ -96,10 +99,8 @@ def getTeam(pollid):
 @app.route('/vote', methods=["POST"])
 def vote():
 	pollid = request.form["pollid"]
-	print(pollid)
 	option = request.form["option"]
 	check = pyBot.getPollbyID(pollid)
-	print(check)
 	if option == check["op1"]:
 		increaseCount = str(int(check["op1count"])+1)
 		pyBot.giveVote(pollid, "op1", increaseCount)
@@ -110,4 +111,4 @@ def vote():
 		return render_template("voted.html")
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run()

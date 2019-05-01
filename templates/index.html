@@ -99,6 +99,29 @@ div.desc {
     background-color: #4CAF50;
     color: white;
 }
+
+body {
+  display: table;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.row {
+  display: table-row;
+  height: 50%;
+}
+
+.row:nth-child(1) {
+  background-color: #eee;
+}
+
+.row:nth-child(2) {
+  background-color: #ddd;
+}
+
+
 </style>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
@@ -108,22 +131,47 @@ div.desc {
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 </head>
 <body>
-        <div class="topnav">
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        </div>        
-{% for i in range(pollsCount|count) %}
-<div class="responsive">
-  <div class="gallery">
-    <div class="desc">
-        <form action="/poll/{{ pollsCount[i]['un_id'] }}" method="POST">
-            <h3>{{ pollsCount[i]['question'] }}</h3>
-            <input type="submit" value="View Poll" class="btn">
-        </form>
+    <div class="topnav">
+    {% if 'login' not in session %}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    {% else %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    {% endif %}
     </div>
-  </div>
-</div>
-{% endfor %}
+    <div class="row">
+        <h2>Public Polls</h2>
+        {% for i in range(pollsCountPublic|count) %}
+        <div class="responsive">
+        <div class="gallery">
+            <div class="desc">
+                <form action="/poll/{{ pollsCountPublic[i]['un_id'] }}" method="POST">
+                    <h3>{{ pollsCountPublic[i]['question'] }}</h3>
+                    <input type="submit" value="View Poll" class="btn">
+                </form>
+            </div>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+    <dic class="row">
+        {% if 'login' in session %}
+        <h2>Private Polls</h2>
+            {% for i in range(pollsCountPrivate|count) %}
+            <div class="responsive">
+            <div class="gallery">
+                <div class="desc">
+                    <form action="/poll/{{ pollsCountPrivate[i]['un_id'] }}" method="POST">
+                        <h3>{{ pollsCountPrivate[i]['question'] }}</h3>
+                        <input type="submit" value="View Poll" class="btn">
+                    </form>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+        </div>
 
 <div class="clearfix"></div>
 
